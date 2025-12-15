@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Users.API", "Users.API\User
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.API", "Movies.API\Movies.API.csproj", "{2582CC38-3F5F-42C9-B167-1B9170486899}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.API", "Gateway.API\Gateway.API.csproj", "{03973FA7-7F07-45FE-95FF-791909DE2FFC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{2582CC38-3F5F-42C9-B167-1B9170486899}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2582CC38-3F5F-42C9-B167-1B9170486899}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2582CC38-3F5F-42C9-B167-1B9170486899}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03973FA7-7F07-45FE-95FF-791909DE2FFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03973FA7-7F07-45FE-95FF-791909DE2FFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03973FA7-7F07-45FE-95FF-791909DE2FFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03973FA7-7F07-45FE-95FF-791909DE2FFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
