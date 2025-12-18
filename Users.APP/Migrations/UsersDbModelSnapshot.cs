@@ -37,6 +37,18 @@ namespace Users.APP.Migrations
                         .IsUnique();
 
                     b.ToTable("Groups");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Title = "Child"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Title = "Adult"
+                        });
                 });
 
             modelBuilder.Entity("Users.APP.Domain.Role", b =>
@@ -59,6 +71,18 @@ namespace Users.APP.Migrations
                         .IsUnique();
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Customer"
+                        });
                 });
 
             modelBuilder.Entity("Users.APP.Domain.User", b =>
@@ -70,14 +94,8 @@ namespace Users.APP.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("BirthDate")
+                    b.Property<DateOnly?>("BirthDate")
                         .HasColumnType("TEXT");
-
-                    b.Property<int?>("CityId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("CountryId")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("FirstName")
                         .HasMaxLength(50)
@@ -123,10 +141,6 @@ namespace Users.APP.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("CountryId");
-
                     b.HasIndex("GroupId");
 
                     b.HasIndex("UserName")
@@ -145,8 +159,17 @@ namespace Users.APP.Migrations
                     b.Property<int>("MovieId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Guid")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("IsFavourite")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("MovieName")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("RatedDate")
                         .HasColumnType("TEXT");

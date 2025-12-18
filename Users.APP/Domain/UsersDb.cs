@@ -51,10 +51,6 @@ namespace Users.APP.Domain
             // UserName data of the Users table can not have multiple same values.
             modelBuilder.Entity<User>().HasIndex(userEntity => userEntity.UserName).IsUnique();
 
-            // Defining indices for optimizing query performance on frequently searched properties.
-            modelBuilder.Entity<User>().HasIndex(userEntity => userEntity.CountryId);
-            modelBuilder.Entity<User>().HasIndex(userEntity => userEntity.CityId);
-
             // Composite index on FirstName and LastName for optimizing searches involving both fields.
             modelBuilder.Entity<User>().HasIndex(userEntity => new { userEntity.FirstName, userEntity.LastName });
 
@@ -88,6 +84,17 @@ namespace Users.APP.Domain
                 .HasOne(userMovie => userMovie.User)
                 .WithMany()
                 .HasForeignKey(userMovie => userMovie.UserId);
+            
+            modelBuilder.Entity<Group>().HasData(
+                new Group { Id = 1, Title = "Child" },
+                new Group { Id = 2, Title = "Adult" }
+            );
+
+            modelBuilder.Entity<Role>().HasData(
+                new Role { Id = 1, Name = "Admin" },
+                new Role { Id = 2, Name = "Customer" } 
+            );
+            
         }
     }
 }

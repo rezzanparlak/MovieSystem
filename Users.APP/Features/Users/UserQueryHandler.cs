@@ -8,20 +8,14 @@ namespace Users.APP.Features.Users
 {
     public class UserQueryRequest : Request, IRequest<IQueryable<UserQueryResponse>>
     {
-        // Properties used for filtering User entity query through the request:
-        // All value type properties are defined as nullable because if they have values, their values will be applied for filtering.
-        // Generally range filtering, including start and end values, is applied for DateTime and numeric properties.
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public Genders? Gender { get; set; }
-        public DateTime? BirthDateStart { get; set; }
-        public DateTime? BirthDateEnd { get; set; }
         public decimal? ScoreStart { get; set; }
         public decimal? ScoreEnd { get; set; }
         public bool? IsActive { get; set; }
-        public int? CountryId { get; set; }
-        public int? CityId { get; set; }
+
         public int? GroupId { get; set; }
         public List<int> RoleIds { get; set; } = new List<int>();
     }
@@ -35,13 +29,11 @@ namespace Users.APP.Features.Users
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public Genders Gender { get; set; }
-        public DateTime? BirthDate { get; set; }
+        public DateOnly? BirthDate { get; set; }
         public DateTime RegistrationDate { get; set; }
         public decimal Score { get; set; }
         public bool IsActive { get; set; }
         public string Address { get; set; }
-        public int? CountryId { get; set; }
-        public int? CityId { get; set; }
         public int? GroupId { get; set; } 
         public List<int> RoleIds { get; set; }
 
@@ -52,8 +44,6 @@ namespace Users.APP.Features.Users
         public string RegistrationDateF { get; set; }
         public string ScoreF { get; set; }
         public string IsActiveF { get; set; }
-        public string Country { get; set; }
-        public string City { get; set; }
         public string Group { get; set; }
         public List<string> Roles { get; set; }
     }
@@ -124,19 +114,6 @@ namespace Users.APP.Features.Users
                 // apply gender filtering to the query for exact match
                 entityQuery = entityQuery.Where(u => u.Gender == request.Gender.Value);
 
-            // if BirthDateStart has a value
-            if (request.BirthDateStart.HasValue)
-                // apply birth date start filtering to the query for greater than or equal match
-                // Way 1: filtering with date and time value (e.g. 08/22/1990 13:45:57)
-                //query = query.Where(u => u.BirthDate.HasValue && u.BirthDate.Value >= request.BirthDateStart.Value);
-                // Way 2: filtering with date value only (e.g. 08/22/1990)
-                entityQuery = entityQuery.Where(u => u.BirthDate.HasValue && u.BirthDate.Value.Date >= request.BirthDateStart.Value.Date);
-
-            // if BirthDateEnd has a value
-            if (request.BirthDateEnd.HasValue)
-                // apply birth date end without time filtering to the query for less than or equal match
-                entityQuery = entityQuery.Where(u => u.BirthDate.HasValue && u.BirthDate.Value.Date <= request.BirthDateEnd.Value.Date);
-
             // if ScoreStart has a value
             if (request.ScoreStart.HasValue)
                 // apply score start filtering to the query for greater than or equal match
@@ -151,16 +128,6 @@ namespace Users.APP.Features.Users
             if (request.IsActive.HasValue)
                 // apply is active filtering to the query for exact match
                 entityQuery = entityQuery.Where(u => u.IsActive == request.IsActive.Value);
-
-            // if CountryId has a value
-            if (request.CountryId.HasValue)
-                // apply country ID filtering to the query for exact match
-                entityQuery = entityQuery.Where(u => u.CountryId == request.CountryId.Value);
-
-            // if CityId has a value
-            if (request.CityId.HasValue)
-                // apply city ID filtering to the query for exact match
-                entityQuery = entityQuery.Where(u => u.CityId == request.CityId.Value);
 
             // if GroupId has a value
             if (request.GroupId.HasValue)
@@ -190,8 +157,6 @@ namespace Users.APP.Features.Users
                 Score = u.Score,
                 IsActive = u.IsActive,
                 Address = u.Address,
-                CountryId = u.CountryId,
-                CityId = u.CityId,
                 GroupId = u.GroupId,
                 RoleIds = u.RoleIds,
 
@@ -199,25 +164,12 @@ namespace Users.APP.Features.Users
                 FullName = u.FirstName + " " + u.LastName,
 
                 GenderF = u.Gender.ToString(), // will assign Woman or Man
-
-                // If User entity's BirthDate value is not null, convert and assign the value with month/day/year format, otherwise assign "".
-                // No need to give the second CultureInfo parameter (e.g. new CultureInfo("tr-TR")) to the ToString method since
-                // CultureInfo property was assigned in the constructor of the base or this class.
-                // Instead of ToString method, ToShortDateString (e.g. 08/18/2025) or ToLongDateString (e.g. Monday, August 18, 2025) methods can be used.
-                // For time ToShortTimeString (17:26) or ToLongTimeString (17:26:52) can be used.
-                // Again CultureInfo parameter is not needed for these methods.
+                
                 BirthDateF = u.BirthDate.HasValue ? u.BirthDate.Value.ToString("MM/dd/yyyy") : string.Empty,
 
                 RegistrationDateF = u.RegistrationDate.ToShortDateString(),
                 ScoreF = u.Score.ToString("N1"), // N: number format, C: currency format, 1: one decimal
                 IsActiveF = u.IsActive ? "Active" : "Inactive",
-
-                // Way 1: Ternary Operator
-                //Country = (u.CountryId.HasValue ? u.CountryId.Value : 0).ToString(),
-                // Way 2:
-                Country = (u.CountryId ?? 0).ToString(), // If u.CountryId value is null use 0 otherwise use u.CountryId value.
-
-                City = (u.CityId ?? 0).ToString(),
                     
                 Group = u.Group != null ? u.Group.Title : null, // Assign the relational Group's Title value if u.Group is not null, otherwise assign null.
 

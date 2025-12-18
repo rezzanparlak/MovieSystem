@@ -1,0 +1,10 @@
+### GET request to example server
+@Movies.API_HostAddress = http://localhost:5221
+# Get movies
+# Create Movies
+# Delete Movies
+# Edit Movies
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=JetBrains Rider
+
+###

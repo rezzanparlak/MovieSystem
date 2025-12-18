@@ -3,7 +3,6 @@ using CORE.APP.Domain;
 
 namespace Movies.APP.Domain
 {
-
     public class Genre : Entity
     {
         [Required, StringLength(30)]
@@ -11,3 +10,4 @@ namespace Movies.APP.Domain
         public List<MovieGenre> MovieGenres { get; set; }
     }
 }
+
