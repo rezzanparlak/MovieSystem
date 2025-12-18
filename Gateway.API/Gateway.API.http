@@ -1,6 +1,20 @@
-@Gateway.API_HostAddress = http://localhost:5211
+@Gateway_HostAddress = https://localhost:5211
 
-GET {{Gateway.API_HostAddress}}/weatherforecast/
+### Register
+POST {{Gateway_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+###
+
+### Login
+POST {{Gateway_HostAddress}}/api/Token
+Content-Type: application/json
+
+###
+
+### Movies (JWT gerekli)
+GET {{Gateway_HostAddress}}/Movies
+Authorization: Bearer
 Accept: application/json
 
 ###

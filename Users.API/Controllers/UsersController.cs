@@ -82,43 +82,6 @@ namespace Users.API.Controllers
             }
         }
 
-        // POST: api/Users
-        [HttpPost]
-        [Authorize(Roles = "Admin")] // Only authenticated users with role Admin can execute this action.
-        public async Task<IActionResult> Post(UserCreateRequest request)
-        {
-            try
-            {
-                // Check if the request model is valid through data annotations
-                if (ModelState.IsValid)
-                {
-                    // Send the create request
-                    var response = await _mediator.Send(request);
-                    // If creation is successful, return 200 OK with success command response
-                    if (response.IsSuccessful)
-                    {
-                        //return CreatedAtAction(nameof(Get), new { id = response.Id }, response);
-                        return Ok(response);
-                    }
-
-                    // If creation failed, add error command response message to model state
-                    ModelState.AddModelError("UsersPost", response.Message);
-                }
-
-                // Return 400 Bad Request with all data annotation validation error messages and the error command response message if added seperated by |
-                return BadRequest(new CommandResponse(false,
-                    string.Join("|", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))));
-            }
-            catch (Exception exception)
-            {
-                // Log the exception
-                _logger.LogError("UsersPost Exception: " + exception.Message);
-                // Return 500 Internal Server Error with an error command response with message
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    new CommandResponse(false, "An exception occured during UsersPost."));
-            }
-        }
-
         // PUT: api/Users
         [HttpPut]
         [Authorize(Roles = "Admin")] // Only authenticated users with role Admin can execute this action.

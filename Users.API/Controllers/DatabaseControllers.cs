@@ -70,9 +70,7 @@ public class DatabaseControllers
                     new User()
                     {
                         Address = "Çankaya",
-                        BirthDate = new DateTime(1980, 8, 21),
-                        CityId = 6,
-                        CountryId = 1,
+                        BirthDate = new DateOnly(1980, 8, 21),
                         FirstName = "Çağıl",
                         Gender = Genders.Man,
                         Guid = Guid.NewGuid().ToString(),
@@ -90,9 +88,7 @@ public class DatabaseControllers
                     },
                     new User()
                     {
-                        BirthDate = DateTime.Parse("09/13/2004", new CultureInfo("en-US")),
-                        CityId = 82,
-                        CountryId = 2,
+                        BirthDate = DateOnly.Parse("09/13/2004", new CultureInfo("en-US")),
                         FirstName = "Luna",
                         Gender = Genders.Woman,
                         Guid = Guid.NewGuid().ToString(),

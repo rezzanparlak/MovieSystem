@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Users.APP.Domain;
 
@@ -10,9 +11,11 @@ using Users.APP.Domain;
 namespace Users.APP.Migrations
 {
     [DbContext(typeof(UsersDb))]
-    partial class UsersDbModelSnapshot : ModelSnapshot
+    [Migration("20251217103654_seedData")]
+    partial class seedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.22");
@@ -94,8 +97,14 @@ namespace Users.APP.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateOnly?>("BirthDate")
+                    b.Property<DateTime?>("BirthDate")
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("CityId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("CountryId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("FirstName")
                         .HasMaxLength(50)
@@ -140,6 +149,10 @@ namespace Users.APP.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("CountryId");
 
                     b.HasIndex("GroupId");
 

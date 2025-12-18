@@ -25,7 +25,7 @@ namespace Users.APP.Features.Users
 
         public Genders Gender { get; set; }
 
-        public DateTime? BirthDate { get; set; }
+        public DateOnly? BirthDate { get; set; }
 
         //public DateTime RegistrationDate { get; set; } // we don't need this property in the request
                                                          // since we won't update it and get its value from the API or UI
@@ -36,12 +36,6 @@ namespace Users.APP.Features.Users
         public bool IsActive { get; set; }
 
         public string Address { get; set; }
-
-        // [Required] // can be defined if each user must have a country
-        public int? CountryId { get; set; }
-
-        //[Required] // can be defined if each user must have a city
-        public int? CityId { get; set; }
 
         //[Reqired] // can be defined if each user must have a group
         public int? GroupId { get; set; }
@@ -89,8 +83,6 @@ namespace Users.APP.Features.Users
             entity.Score = request.Score;
             entity.IsActive = request.IsActive;
             entity.Address = request.Address?.Trim(); // ? is used because request.Address can be null
-            entity.CountryId = request.CountryId;
-            entity.CityId = request.CityId;
             entity.GroupId = request.GroupId;
             entity.RoleIds = request.RoleIds;
 
