@@ -9,7 +9,7 @@ namespace Movies.APP.Features.Movies
 {
     public class MovieCreateRequest : Request, IRequest<CommandResponse>
     {
-        [Required, StringLength(100)] 
+        [Required, StringLength(100, MinimumLength = 1)] 
         public string Name { get; set; }
         
         [Required, StringLength(100)]
@@ -20,7 +20,8 @@ namespace Movies.APP.Features.Movies
         [Range(0, double.MaxValue)]
         public decimal? TotaRevenue { get; set; }
 
-        public int? DirectorId { get; set; } 
+        [Required]
+        public int DirectorId { get; set; } 
         
         [Required]
         public List<int> GenreIds { get; set; }
@@ -29,24 +30,47 @@ namespace Movies.APP.Features.Movies
 
     public class MovieCreateHandler : ServiceBase, IRequestHandler<MovieCreateRequest, CommandResponse>
     {
-        private readonly MovieDb _db;
-        public  MovieCreateHandler(MovieDb db)
+        private readonly MovieDB _db;
+        public  MovieCreateHandler(MovieDB db)
         {
             _db = db;
         }
         public async Task<CommandResponse> Handle(MovieCreateRequest request, CancellationToken cancellationToken)
         {
-            if (await _db.Movies.AnyAsync(movieEntity => movieEntity.Name == request.Name.Trim(), cancellationToken)) 
+            var name = request.Name?.Trim();
+            if (string.IsNullOrWhiteSpace(name))
+                return Error("Name is required.");
+
+            if (await _db.Movies.AnyAsync(movieEntity => movieEntity.Name == name, cancellationToken)) 
                 return Error("Movie already exists");
+
+            // director must exist
+            var directorExists = await _db.Directors.AnyAsync(d => d.Id == request.DirectorId, cancellationToken);
+            if (!directorExists)
+                return Error("Director not found.");
+
+            // genres must exist and be unique
+            var distinctGenreIds = request.GenreIds
+                .Where(id => id > 0)
+                .Distinct()
+                .ToList();
+
+            if (distinctGenreIds.Count == 0)
+                return Error("At least one genre must be selected.");
+
+            var existingGenreCount = await _db.Genres
+                .CountAsync(g => distinctGenreIds.Contains(g.Id), cancellationToken);
+
+            if (existingGenreCount != distinctGenreIds.Count)
+                return Error("One or more genres were not found.");
 
             var entity = new Movie()
             {
-                Name = request.Name.Trim(),
-                Director = request.Director,
+                Name = name,
                 ReleaseDate = request.ReleaseDate,
                 TotaRevenue = request.TotaRevenue,
                 DirectorId = request.DirectorId,
-                GenreIds = request.GenreIds
+                GenreIds = distinctGenreIds
             };
             
             _db.Movies.Add(entity);

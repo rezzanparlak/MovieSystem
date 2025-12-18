@@ -29,7 +29,7 @@ namespace Movies.APP.Features.Movies
                 Error("Movie not found");
             Delete(entity.MovieGenres);
             Delete(entity);
-            return Success("User deleted successfully.", entity.Id);
+            return Success("Movie deleted successfully.", entity.Id);
         }
     }
 }

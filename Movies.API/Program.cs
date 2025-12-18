@@ -8,12 +8,13 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// builder.AddServiceDefaults();
+builder.AddServiceDefaults();
 
 // Add services to the IoC Container.
 // DbContext:
-builder.Services.AddDbContext<DbContext, MovieDb>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString(nameof(MovieDb))));
+// Program.cs içinde
+builder.Services.AddDbContext<DbContext, MovieDB>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("MovieDB")));
 
 // Mediator:
 foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -94,13 +95,16 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseDeveloperExceptionPage();
 
 app.UseHttpsRedirection();
+
+var cs = builder.Configuration.GetConnectionString("MovieDB");
+Console.WriteLine($"[DEBUG] MovieDb connection string = {cs}");
+
 
 // Authentication:
 app.UseAuthentication();
