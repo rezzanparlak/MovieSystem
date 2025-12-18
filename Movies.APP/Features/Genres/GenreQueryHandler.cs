@@ -16,9 +16,9 @@ namespace Movies.APP.Features.Genres
 
     public class GenreQueryHandler : ServiceBase, IRequestHandler<GenreQueryRequest, IQueryable<GenreQueryResponse>>
     {
-        private readonly MovieDb _db;
+        private readonly MovieDB _db;
 
-        public GenreQueryHandler(MovieDb db)
+        public GenreQueryHandler(MovieDB db)
         {
             _db = db;
         }

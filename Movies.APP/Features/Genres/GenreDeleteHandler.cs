@@ -12,9 +12,9 @@ namespace Movies.APP.Features.Genres
 
     public class GenreDeleteHandler : ServiceBase, IRequestHandler<GenreDeleteRequest, CommandResponse>
     {
-        private readonly MovieDb _db;
+        private readonly MovieDB _db;
 
-        public GenreDeleteHandler(MovieDb db)
+        public GenreDeleteHandler(MovieDB db)
         {
             _db = db;
         }

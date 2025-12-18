@@ -1,0 +1,4 @@
+@HOST = http://localhost:5000
+
+### Get all movies
+GET {{HOST}}/api/Movies

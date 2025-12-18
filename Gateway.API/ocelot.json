@@ -61,7 +61,6 @@
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ]
     },
     {
-      // for testing the gateway to send a request to the WeatherForecastController of Locations.API
       "DownstreamPathTemplate": "/weatherforecast",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

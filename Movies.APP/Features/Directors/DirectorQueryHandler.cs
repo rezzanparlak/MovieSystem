@@ -20,9 +20,9 @@ namespace Movies.APP.Features.Directors
 
     public class DirectorQueryHandler : ServiceBase, IRequestHandler<DirectorQueryRequest, IQueryable<DirectorQueryResponse>>
     {
-        private readonly MovieDb _db;
+        private readonly MovieDB _db;
 
-        public DirectorQueryHandler(MovieDb db)
+        public DirectorQueryHandler(MovieDB db)
         {
             _db = db;
         }

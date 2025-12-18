@@ -11,14 +11,14 @@ using Movies.APP.Domain;
 namespace Movies.APP.Migrations
 {
     [DbContext(typeof(MovieDB))]
-    [Migration("20251120124958_v1")]
-    partial class v1
+    [Migration("20251217105133_SchemaFix")]
+    partial class SchemaFix
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.22");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.19");
 
             modelBuilder.Entity("Movies.APP.Domain.Director", b =>
                 {
@@ -26,10 +26,9 @@ namespace Movies.APP.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("DirectorId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(30)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Guid")
@@ -39,6 +38,8 @@ namespace Movies.APP.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(30)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -46,6 +47,29 @@ namespace Movies.APP.Migrations
                     b.HasIndex("FirstName", "LastName");
 
                     b.ToTable("Directors");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            FirstName = "Christopher",
+                            IsRetired = false,
+                            LastName = "Nolan"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            FirstName = "Quentin",
+                            IsRetired = false,
+                            LastName = "Tarantino"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            FirstName = "Greta",
+                            IsRetired = false,
+                            LastName = "Gerwig"
+                        });
                 });
 
             modelBuilder.Entity("Movies.APP.Domain.Genre", b =>
@@ -54,13 +78,12 @@ namespace Movies.APP.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("GenreId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Guid")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -69,6 +92,28 @@ namespace Movies.APP.Migrations
                         .IsUnique();
 
                     b.ToTable("Genres");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Action"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Drama"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Comedy"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Sci-Fi"
+                        });
                 });
 
             modelBuilder.Entity("Movies.APP.Domain.Movie", b =>
@@ -83,10 +128,9 @@ namespace Movies.APP.Migrations
                     b.Property<string>("Guid")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("MovieId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("ReleaseDate")
@@ -103,12 +147,37 @@ namespace Movies.APP.Migrations
                         .IsUnique();
 
                     b.ToTable("Movies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DirectorId = 1,
+                            Name = "Inception",
+                            ReleaseDate = new DateTime(2010, 7, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotaRevenue = 829895144m
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DirectorId = 2,
+                            Name = "Pulp Fiction",
+                            ReleaseDate = new DateTime(1994, 10, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotaRevenue = 213928762m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DirectorId = 3,
+                            Name = "Barbie",
+                            ReleaseDate = new DateTime(2023, 7, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotaRevenue = 1440000000m
+                        });
                 });
 
             modelBuilder.Entity("Movies.APP.Domain.MovieGenre", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("MovieId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("GenreId")
@@ -117,19 +186,46 @@ namespace Movies.APP.Migrations
                     b.Property<string>("Guid")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("MovieGenreId")
+                    b.Property<int>("Id")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("MovieId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
+                    b.HasKey("MovieId", "GenreId");
 
                     b.HasIndex("GenreId");
 
-                    b.HasIndex("MovieId");
-
                     b.ToTable("MovieGenres");
+
+                    b.HasData(
+                        new
+                        {
+                            MovieId = 1,
+                            GenreId = 1,
+                            Id = 0
+                        },
+                        new
+                        {
+                            MovieId = 1,
+                            GenreId = 4,
+                            Id = 0
+                        },
+                        new
+                        {
+                            MovieId = 2,
+                            GenreId = 2,
+                            Id = 0
+                        },
+                        new
+                        {
+                            MovieId = 3,
+                            GenreId = 3,
+                            Id = 0
+                        },
+                        new
+                        {
+                            MovieId = 3,
+                            GenreId = 2,
+                            Id = 0
+                        });
                 });
 
             modelBuilder.Entity("Movies.APP.Domain.Movie", b =>
