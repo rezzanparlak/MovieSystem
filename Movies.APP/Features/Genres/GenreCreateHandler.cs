@@ -14,8 +14,8 @@ namespace Movies.APP.Features.Genres
     }
     public class GenreCreateHandler : ServiceBase, IRequestHandler<GenreCreateRequest, CommandResponse>
     {
-        private readonly MovieDb _db;
-        public GenreCreateHandler(MovieDb db)
+        private readonly MovieDB _db;
+        public GenreCreateHandler(MovieDB db)
         {
             _db = db;
         }

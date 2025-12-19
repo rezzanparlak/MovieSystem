@@ -15,7 +15,9 @@ namespace Movies.APP.Features.Movies
         
         [Range(0, double.MaxValue)]
         public decimal? TotaRevenue { get; set; }
+        [Required]
         public int? DirectorId { get; set; }
+        [Required, MinLength(1)] 
         public List<int> GenreIds { get; set; } = new List<int>();
     }
 
@@ -38,6 +40,36 @@ namespace Movies.APP.Features.Movies
             if (entity is null)
                 return Error("Movie not found!");
 
+            var name = request.Name?.Trim();
+            if (string.IsNullOrWhiteSpace(name))
+                return Error("Name is required.");
+
+            // unique name check 
+            var nameExists = await Query()
+                .AnyAsync(m => m.Id != request.Id && m.Name == name, cancellationToken);
+            if (nameExists)
+                return Error("Movie already exists.");
+
+            // director must exist
+            var directorExists = await Query<Director>()
+                .AnyAsync(d => d.Id == request.DirectorId, cancellationToken);
+            if (!directorExists)
+                return Error("Director not found.");
+
+            // genres must exist and be unique
+            var distinctGenreIds = request.GenreIds
+                .Where(id => id > 0)
+                .Distinct()
+                .ToList();
+
+            if (distinctGenreIds.Count == 0)
+                return Error("At least one genre must be selected.");
+
+            var existingGenreCount = await Query<Genre>()
+                .CountAsync(g => distinctGenreIds.Contains(g.Id), cancellationToken);
+            if (existingGenreCount != distinctGenreIds.Count)
+                return Error("One or more genres were not found.");
+            
             Delete(entity.MovieGenres);
             entity.Name = request.Name;
             entity.ReleaseDate = request.ReleaseDate;

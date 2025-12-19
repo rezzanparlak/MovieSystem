@@ -3,15 +3,15 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Movies.APP.Domain
 {
-    public class MovieDbFactory : IDesignTimeDbContextFactory<MovieDb>
+    public class MovieDbFactory : IDesignTimeDbContextFactory<MovieDB>
     {
         private const string ConnectionString = "data source=MovieDB";
 
-        public MovieDb CreateDbContext(string[] args)
+        public MovieDB CreateDbContext(string[] args)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<MovieDb>();
+            var optionsBuilder = new DbContextOptionsBuilder<MovieDB>();
             optionsBuilder.UseSqlite(ConnectionString);
-            return new MovieDb(optionsBuilder.Options);
+            return new MovieDB(optionsBuilder.Options);
         }
     }
 }

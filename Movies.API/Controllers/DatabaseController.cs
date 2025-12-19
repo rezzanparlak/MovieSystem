@@ -10,9 +10,9 @@ namespace Movies.API.Controllers
     [ApiController]
     public class DatabaseController : ControllerBase
     {
-    private readonly MovieDb _db; 
+    private readonly MovieDB _db; 
         private readonly IWebHostEnvironment _environment;
-        public DatabaseController(MovieDb db, IWebHostEnvironment environment)
+        public DatabaseController(MovieDB db, IWebHostEnvironment environment)
         {
             _db = db;
             _environment = environment;

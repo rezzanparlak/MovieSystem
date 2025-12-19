@@ -10,7 +10,7 @@ using Movies.APP.Domain;
 
 namespace Movies.APP.Migrations
 {
-    [DbContext(typeof(MovieDb))]
+    [DbContext(typeof(MovieDB))]
     [Migration("20251213215741_v2")]
     partial class v2
     {

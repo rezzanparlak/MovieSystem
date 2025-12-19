@@ -15,9 +15,9 @@ namespace Movies.APP.Features.Genres
 
     public class GenreUpdateHandler : ServiceBase, IRequestHandler<GenreUpdateRequest, CommandResponse>
     {
-        private readonly MovieDb _db;
+        private readonly MovieDB _db;
 
-        public GenreUpdateHandler(MovieDb db)
+        public GenreUpdateHandler(MovieDB db)
         {
             _db = db;
         }

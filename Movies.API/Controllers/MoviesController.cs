@@ -4,14 +4,13 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Security.Claims;
 
 namespace Movies.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class MoviesController : ControllerBase
     {
         private readonly ILogger<MoviesController> _logger;
@@ -23,105 +22,160 @@ namespace Movies.API.Controllers
             _mediator = mediator;
         }
 
-        // =====================================================
-        // ================= ADMIN ENDPOINTS ===================
-        // =====================================================
-
+        // GET: api/Movies
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         public async Task<IActionResult> Get()
         {
             try
             {
-                var response = await _mediator.Send(new MovieQueryRequest());
-                var list = await response.ToListAsync();
-                return list.Any() ? Ok(list) : NoContent();
+                // Handler artık List<MovieQueryResponse> döndürüyor
+                var list = await _mediator.Send(new MovieQueryRequest());
+
+                if (list.Any())
+                    return Ok(list);
+
+                return NoContent();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                _logger.LogError(ex, "MoviesGet Exception");
-                return StatusCode(500, new CommandResponse(false, "MoviesGet failed"));
+                _logger.LogError(exception, "MoviesGet Exception");
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new CommandResponse(false, "An exception occured during MoviesGet.")
+                );
             }
         }
 
-        [HttpGet("{id}")]
-        [Authorize(Roles = "Admin")]
+        // GET: api/Movies/5
+        [HttpGet("{id:int}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Get(int id)
         {
             try
             {
-                var response = await _mediator.Send(new MovieQueryRequest());
-                var item = await response.SingleOrDefaultAsync(x => x.Id == id);
-                return item != null ? Ok(item) : NoContent();
+                var list = await _mediator.Send(new MovieQueryRequest());
+
+                // Artık SingleOrDefaultAsync YOK
+                var item = list.SingleOrDefault(r => r.Id == id);
+
+                if (item is not null)
+                    return Ok(item);
+
+                return NoContent();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                _logger.LogError(ex, "MoviesGetById Exception");
-                return StatusCode(500, new CommandResponse(false, "MoviesGetById failed"));
+                _logger.LogError(exception, "MoviesGetById Exception");
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new CommandResponse(false, "An exception occured during MoviesGetById.")
+                );
             }
         }
 
+        // POST: api/Movies
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Post(MovieCreateRequest request)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var response = await _mediator.Send(request);
-            return response.IsSuccessful ? Ok(response) : BadRequest(response);
-        }
-
-        [HttpPut]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Put(MovieUpdateRequest request)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var response = await _mediator.Send(request);
-            return response.IsSuccessful ? Ok(response) : BadRequest(response);
-        }
-
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var response = await _mediator.Send(new MovieDeleteRequest { Id = id });
-            return response.IsSuccessful ? Ok(response) : BadRequest(response);
-        }
-
-        // =====================================================
-        // ============== CUSTOMER ENDPOINTS ===================
-        // =====================================================
-
-        /// Customer movie list filtered by age (child/adult)
-        /// Customer movie list filtered by age (child/adult)
-        [HttpGet("customer")]
-        [Authorize(Roles = "User,Customer")]
-        public async Task<IActionResult> GetForCustomer()
         {
             try
             {
-                // JWT içindeki group claim (Child / Adult)
-                var group = User.Claims.FirstOrDefault(c => c.Type == "group")?.Value;
-
-                var isChildCustomer = group == "Child";
-
-                var query = new MovieQueryRequest
+                if (ModelState.IsValid)
                 {
-                    IsChildCustomer = isChildCustomer
-                };
+                    var response = await _mediator.Send(request);
 
-                var response = await _mediator.Send(query);
-                var list = await response.ToListAsync();
+                    if (response.IsSuccessful)
+                        return Ok(response);
 
-                return list.Any() ? Ok(list) : NoContent();
+                    ModelState.AddModelError("MoviesPost", response.Message);
+                }
+
+                return BadRequest(
+                    new CommandResponse(
+                        false,
+                        string.Join("|",
+                            ModelState.Values
+                                .SelectMany(v => v.Errors)
+                                .Select(e => e.ErrorMessage))
+                    )
+                );
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                _logger.LogError(ex, "CustomerMovies Exception");
-                return StatusCode(500, new CommandResponse(false, "CustomerMovies failed"));
+                _logger.LogError("MoviesPost Exception: " + exception.Message);
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new CommandResponse(false, "An exception occured during MoviesPost.")
+                );
+            }
+        }
+
+        // PUT: api/Movies
+        [HttpPut]
+        public async Task<IActionResult> Put(MovieUpdateRequest request)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var response = await _mediator.Send(request);
+
+                    if (response.IsSuccessful)
+                        return Ok(response);
+
+                    ModelState.AddModelError("MoviesPut", response.Message);
+                }
+
+                return BadRequest(
+                    new CommandResponse(
+                        false,
+                        string.Join("|",
+                            ModelState.Values
+                                .SelectMany(v => v.Errors)
+                                .Select(e => e.ErrorMessage))
+                    )
+                );
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError("MoviesPut Exception: " + exception.Message);
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new CommandResponse(false, "An exception occured during MoviesPut.")
+                );
+            }
+        }
+
+        // DELETE: api/Movies/5
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var response = await _mediator.Send(new MovieDeleteRequest { Id = id });
+
+                if (response.IsSuccessful)
+                    return Ok(response);
+
+                ModelState.AddModelError("MoviesDelete", response.Message);
+
+                return BadRequest(
+                    new CommandResponse(
+                        false,
+                        string.Join("|",
+                            ModelState.Values
+                                .SelectMany(v => v.Errors)
+                                .Select(e => e.ErrorMessage))
+                    )
+                );
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError("MoviesDelete Exception: " + exception.Message);
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new CommandResponse(false, "An exception occured during MoviesDelete.")
+                );
             }
         }
     }
