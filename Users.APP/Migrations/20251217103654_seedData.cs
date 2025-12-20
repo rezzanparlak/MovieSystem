@@ -46,7 +46,7 @@ namespace Users.APP.Migrations
                 values: new object[,]
                 {
                     { 1, null, "Admin" },
-                    { 2, null, "User" }
+                    { 2, null, "Customer" }
                 });
         }
 
