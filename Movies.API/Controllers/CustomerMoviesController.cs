@@ -10,7 +10,7 @@ namespace Movies.API.Controllers;
 
 [Route("api/customer/movies")]
 [ApiController]
-[Authorize(Roles = "User,Customer")]
+[Authorize(Roles = "User")]
 public class CustomerMoviesController : ControllerBase
 {
     private readonly ILogger<CustomerMoviesController> _logger;
