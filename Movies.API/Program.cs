@@ -1,37 +1,26 @@
-﻿
-using Movies.APP.Domain; 
+﻿using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Movies.APP.Domain;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServiceDefaults();
-
-// Add services to the IoC Container.
-// DbContext:
-// Program.cs içinde
+// DB (SQLite)
 builder.Services.AddDbContext<DbContext, MovieDB>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("MovieDB")));
-
-// Mediator:
-foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-{
-    builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblies(assembly));
-}
-
-// Authentication:
+builder.Services.AddMediatR(typeof(MovieDB).Assembly);
 builder.Configuration["SecurityKey"] = "users_microservices_security_key_2025=";
-
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(config =>
     {
         config.TokenValidationParameters = new TokenValidationParameters
         {
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["SecurityKey"] ?? string.Empty)),
+                Encoding.UTF8.GetBytes(builder.Configuration["SecurityKey"] ?? string.Empty)
+            ),
             ValidIssuer = builder.Configuration["Issuer"],
             ValidAudience = builder.Configuration["Audience"],
             ValidateIssuer = true,
@@ -40,33 +29,25 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime = true
         };
     });
+builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-// Swagger:
+// Swagger + JWT
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Movies API",
-        Version = "v1"
-    });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Movies API", Version = "v1" });
     c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = JwtBearerDefaults.AuthenticationScheme,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = """
-        JWT Authorization header using the Bearer scheme.
-        Enter your JWT as: "Bearer jwt"
-        Example: "Bearer a1b2c3"
-        """
+        Description = "Bearer {token}"
     });
+
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -83,10 +64,10 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// CORS:
+// CORS
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policyBuilder => policyBuilder
+    options.AddDefaultPolicy(p => p
         .AllowAnyOrigin()
         .AllowAnyHeader()
         .AllowAnyMethod());
@@ -94,26 +75,21 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseDeveloperExceptionPage();
-
 app.UseHttpsRedirection();
 
-var cs = builder.Configuration.GetConnectionString("MovieDB");
-Console.WriteLine($"[DEBUG] MovieDb connection string = {cs}");
+app.UseCors();
 
-
-// Authentication:
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllers();
-
-// CORS:
-app.UseCors();
 
 app.Run();
