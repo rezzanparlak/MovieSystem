@@ -13,7 +13,7 @@ namespace Movies.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Customer")]
     public class GenresController : ControllerBase
     {
         private readonly ILogger<GenresController> _logger;
@@ -28,7 +28,6 @@ namespace Movies.API.Controllers
 
         // GET: api/Genres
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> Get()
         {
             try
@@ -54,7 +53,6 @@ namespace Movies.API.Controllers
 
         // GET: api/Genres/5||
         [HttpGet("{id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> Get(int id)
         {
             try

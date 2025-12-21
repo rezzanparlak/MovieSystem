@@ -11,19 +11,22 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CORE\CORE.csproj" />
       <ProjectReference Include="..\Movies.APP\Movies.APP.csproj" />
-      <ProjectReference Include="..\MovieSystem.AppHost\MovieSystem.AppHost.csproj" />
-      <ProjectReference Include="..\MovieSystem.ServiceDefaults\MovieSystem.ServiceDefaults.csproj" />
-      <ProjectReference Include="..\Users.API\Users.API.csproj" />
-      <ProjectReference Include="..\Users.APP\Users.APP.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
-        <PrivateAssets>all</PrivateAssets>
+        <PackageReference Include="MediatR" Version="8.1.0" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.19" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.19">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.19">
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PrivateAssets>all</PrivateAssets>
       </PackageReference>
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 
 </Project>
