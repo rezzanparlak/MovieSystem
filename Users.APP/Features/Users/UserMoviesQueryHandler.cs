@@ -35,7 +35,7 @@ public class UserMoviesQueryHandler : Service<UserMovie>, IRequestHandler<UserMo
             {
                 Id = userMovie.UserId,
                 MovieId = userMovie.MovieId,
-                MovieName = movie?.MovieName ?? userMovie.MovieName,
+                MovieName = movie?.MovieName,
                 Rating = userMovie.Rating,
             });
         }

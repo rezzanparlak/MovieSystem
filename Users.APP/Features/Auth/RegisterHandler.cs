@@ -40,7 +40,7 @@ namespace Users.APP.Features.Auth
                 return new RegisterResponse(false, "Groups not seeded.");
 
             var role = await _db.Set<Role>()
-                .SingleOrDefaultAsync(r => r.Name == "User", cancellationToken);
+                .SingleOrDefaultAsync(r => r.Name == "Customer", cancellationToken);
 
             if (role == null)
                 return new RegisterResponse(false, "Roles not seeded.");

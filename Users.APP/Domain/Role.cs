@@ -8,8 +8,6 @@ public class Role : Entity
     [Required, StringLength(25)]
     public string Name { get; set; }
 
-
-
     // for users-roles many to many relationship
     public List<UserRole> UserRoles { get; set; } = new List<UserRole>(); // navigation property for retrieving related UserRole
     // entities data of the Role entity data in queries,
