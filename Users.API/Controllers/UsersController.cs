@@ -131,7 +131,7 @@ namespace Users.API.Controllers
         /// Score +10 after successful rating.
         /// </summary>
         [HttpPost("rate-movie")]
-        [Authorize(Roles = "User,Customer")]
+        [Authorize(Roles = "Admin,Customer")]
         public async Task<IActionResult> RateMovie(UserRateMovieRequest request)
         {
             try

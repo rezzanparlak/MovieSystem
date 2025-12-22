@@ -55,7 +55,7 @@ namespace Movies.APP.Features.Movies
             MovieQueryRequest request,
             CancellationToken cancellationToken)
         {
-            // 1. Adım: Temel sorguyu ve filtreleri hazırla (Bu aşama IQueryable - Henüz SQL çalışmadı)
+            // 1. Adım: Temel sorguyu ve filtreleri hazırla
             var entityQuery = Query();
 
             // İsim filtresi
@@ -132,7 +132,7 @@ namespace Movies.APP.Features.Movies
                     ? m.TotaRevenue.Value.ToString("N2") 
                     : "0.00",
 
-                // Yönetmen adı birleştirme (Bu da SQL'e çevrilemiyordu)
+                // Yönetmen adı birleştirme
                 Director = m.Director != null
                     ? $"{m.Director.FirstName} {m.Director.LastName}".Trim()
                     : string.Empty,

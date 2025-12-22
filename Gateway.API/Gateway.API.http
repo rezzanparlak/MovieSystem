@@ -1,20 +1,50 @@
 @Gateway_HostAddress = https://localhost:5211
 
+# Login response'undan token'ı kopyalayıp buraya yapıştır
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic3VlZGFha2NhIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJncm91cCI6IkFkdWx0IiwibmJmIjoxNzY2MzUxMjA3LCJleHAiOjE3NjYzNTE1MDcsImlzcyI6Imh0dHBzOi8vdXNlcnNtaWNyb3NlcnZpY2VzLmNvbSIsImF1ZCI6Imh0dHBzOi8vdXNlcnNtaWNyb3NlcnZpY2VzLmNvbSJ9.WYX3ELxYdlgup0nmCEUqG9j1isgMsb0-fylrPTAOhCk
+
+# GET/DELETE/PUT testleri için id'yi buradan değiştir
+@movieId = 1
+
 ### Register
 POST {{Gateway_HostAddress}}/api/auth/register
 Content-Type: application/json
-
-###
 
 ### Login
 POST {{Gateway_HostAddress}}/api/Token
 Content-Type: application/json
 
-###
+### Movies - GET ALL (JWT gerekli)
+GET {{Gateway_HostAddress}}/api/Movies
+Authorization: Bearer {{token}}
+Accept: application/json
 
-### Movies (JWT gerekli)
-GET {{Gateway_HostAddress}}/Movies
-Authorization: Bearer
+
+### Movies - GET BY ID (JWT gerekli)
+GET {{Gateway_HostAddress}}/api/Movies/{{movieId}}
+Authorization: Bearer {{token}}
+Accept: application/json
+
+
+### Movies - CREATE (JWT gerekli)
+POST {{Gateway_HostAddress}}/api/Movies
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+### Movies - UPDATE (JWT gerekli)
+PUT {{Gateway_HostAddress}}/api/Movies/{{movieId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+### Movies - DELETE (JWT gerekli)
+DELETE {{Gateway_HostAddress}}/api/Movies/{{movieId}}
+Authorization: Bearer {{token}}
 Accept: application/json
 
 ###
+POST {{Gateway_HostAddress}}/api/Users/rate-movie
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json

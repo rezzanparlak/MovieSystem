@@ -3,56 +3,65 @@
     {
       "DownstreamPathTemplate": "/api/auth/register",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5021 }
-      ],
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5021 }],
       "UpstreamPathTemplate": "/api/auth/register",
-      "UpstreamHttpMethod": [ "POST", "OPTIONS" ]
+      "UpstreamHttpMethod": ["POST", "OPTIONS"]
     },
     {
       "DownstreamPathTemplate": "/api/Token",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5021 }
-      ],
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5021 }],
       "UpstreamPathTemplate": "/api/Token",
-      "UpstreamHttpMethod": [ "POST", "OPTIONS" ]
+      "UpstreamHttpMethod": ["POST", "OPTIONS"]
     },
     {
       "DownstreamPathTemplate": "/api/RefreshToken",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5021 }
-      ],
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5021 }],
       "UpstreamPathTemplate": "/api/RefreshToken",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST", "OPTIONS"]
     },
     {
       "DownstreamPathTemplate": "/api/users",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5021 }
-      ],
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5021 }],
       "UpstreamPathTemplate": "/api/users",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": ["GET", "OPTIONS"]
     },
     {
       "DownstreamPathTemplate": "/api/users/{id}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5021 }
-      ],
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5021 }],
       "UpstreamPathTemplate": "/api/users/{id}",
-      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
+      "UpstreamHttpMethod": ["GET", "PUT", "DELETE", "OPTIONS"]
     },
     {
       "DownstreamPathTemplate": "/api/users/getfiltered",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5021 }
-      ],
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5021 }],
       "UpstreamPathTemplate": "/api/users/getfiltered",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": ["POST", "OPTIONS"]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Movies",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5105 }],
+      "UpstreamPathTemplate": "/api/Movies",
+      "UpstreamHttpMethod": ["GET", "POST", "OPTIONS"]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Movies/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5105 }],
+      "UpstreamPathTemplate": "/api/Movies/{id}",
+      "UpstreamHttpMethod": ["GET", "PUT", "DELETE", "OPTIONS"]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Users/rate-movie",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5021 }],
+      "UpstreamPathTemplate": "/api/Users/rate-movie",
+      "UpstreamHttpMethod": [ "POST", "OPTIONS" ]
     }
   ],
   "GlobalConfiguration": {
